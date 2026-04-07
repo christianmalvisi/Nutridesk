@@ -107,10 +107,10 @@
       content: '';
       position: absolute;
       inset: 0;
-      background-image: url(''); /* ← inserisci qui il nome del tuo file */
+      background-image: url('dashboard.png'); /* ← inserisci qui il nome del tuo file */
       background-size: cover;
       background-position: center top;
-      opacity: 0.4; /* ← regola l'opacità: 0.04 quasi invisibile, 0.12 molto visibile */
+      opacity: 0.06; /* ← regola l'opacità: 0.04 quasi invisibile, 0.12 molto visibile */
       pointer-events: none;
       z-index: 0;
     }
@@ -1157,14 +1157,15 @@
   <h1>Gestisci i pazienti,<br>non i <em>messaggi</em>.</h1>
   <p class="hero-sub">NutriDesk raccoglie misurazioni, piani alimentari, foto corporee e comunicazioni in un unico posto. Zero WhatsApp. Zero Excel. Zero caos.</p>
 
-  <form class="hero-form" id="heroForm" onsubmit="handleSubmit(event, 'heroSuccess')">
+  <form class="hero-form" action="https://formspree.io/f/maqlvbrp" method="POST" id="heroForm" onsubmit="handleSubmit(event, 'heroSuccess')">
     <input type="email" placeholder="La tua email professionale" required>
     <button type="submit" class="btn-primary">Richiedi accesso →</button>
   </form>
   <div class="success-msg" id="heroSuccess">
     ✓ Ottimo! Ti contatteremo a breve con le istruzioni per l'accesso.
   </div>
-<p class="hero-note">Nessun abbonamento. Nessuna carta di credito. Pagamento una tantum.<br>Inviando la tua email accetti di essere contattato riguardo a NutriDesk. Nessuno spam, nessuna cessione a terzi.</p></section>
+  <p class="hero-note">Inviando la tua email accetti di essere contattato riguardo a NutriDesk. Nessuno spam, nessuna cessione a terzi.</p>
+</section>
 </div>
 
 <!-- SOCIAL PROOF BAR -->
@@ -1513,7 +1514,8 @@
     </div>
     <div class="infra-num">
       <div class="num">1x</div>
-<p class="final-note">Nessun abbonamento. Pagamento una tantum. Posti limitati.<br>Inviando la tua email accetti di essere contattato riguardo a NutriDesk. Nessuno spam, nessuna cessione a terzi.</p>    </div>
+      <div class="num-label">pagamento una tantum, nessun abbonamento</div>
+    </div>
   </div>
 </section>
 
@@ -1526,7 +1528,7 @@
     <div class="story-author">
       <div class="author-info">
         <p>Christian Malvisi</p>
-        <span>Fondatore di NUtridesk</span>
+        <span>Fondatore di NutriDesk</span>
       </div>
     </div>
   </div>
@@ -1538,14 +1540,14 @@
   <h2>Smetti di inseguire<br>i <em>messaggi</em>.</h2>
   <p>Entra nella lista d'attesa. Sarai tra i primi a provare NutriDesk, a influenzare lo sviluppo e ad accedere al prezzo di lancio.</p>
 
-  <form class="final-form" id="finalForm" onsubmit="handleSubmit(event, 'finalSuccess')">
+  <form class="final-form" action="https://formspree.io/f/maqlvbrp" method="POST" id="finalForm" onsubmit="handleSubmit(event, 'finalSuccess')">
     <input type="email" placeholder="La tua email" required>
     <button type="submit" class="btn-primary">Richiedi accesso →</button>
   </form>
   <div class="success-msg" id="finalSuccess" style="margin: 0 auto 16px; text-align: left;">
     ✓ Ottimo! Ti contatteremo a breve con le istruzioni per l'accesso.
   </div>
-  <p class="final-note">Nessun abbonamento. Pagamento una tantum. Posti limitati.</p>
+  <p class="final-note">Inviando la tua email accetti di essere contattato riguardo a NutriDesk. Nessuno spam, nessuna cessione a terzi.</p>
 </section>
 
 <!-- FOOTER -->
@@ -1558,15 +1560,26 @@
 </footer>
 
 <script>
-  // Form submit handler
-  function handleSubmit(e, successId) {
-    e.preventDefault();
-    const form = e.target;
+  function handleSubmit(event, successId) {
+    event.preventDefault();
+    const form = event.target;
     const success = document.getElementById(successId);
-    // Here you'd send the email to your backend/Formspree/Mailchimp
-    // For now, just show success message
-    form.style.display = 'none';
-    success.style.display = 'block';
+    const data = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        alert('Qualcosa è andato storto. Riprova o scrivi a ciao@getnutridesk.it');
+      }
+    }).catch(() => {
+      alert('Errore di connessione. Riprova tra qualche istante.');
+    });
   }
 
   // Scroll animations
